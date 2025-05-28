@@ -1,0 +1,17 @@
+- name: Deploy Spring Boot app
+  hosts: app_servers
+  become: yes
+  vars:
+    dest_path: /opt/myapp
+  tasks:
+    - name: Copy JAR
+      copy:
+        src: "{{ artifact_path }}"
+        dest: "{{ dest_path }}/app.jar"
+        mode: '0755'
+    - name: Restart App
+      systemd:
+        name: myapp
+        state: restarted
+        enabled: yes
+      ignore_errors: yes
